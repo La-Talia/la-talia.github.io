@@ -345,7 +345,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
         <p>This site is my <em>public notebook</em>. Every guide here exists because I got stuck on that exact topic and couldn't find a clear explanation. If it helps someone get unstuck, it was worth writing.</p>
         <p>On the CP side I compete on <strong>Codeforces</strong> using a custom C++ template with Python ergonomics. On the ML side I explore neural architectures. On the robotics and CAD side, I <em>build things that move</em>.</p>
         <div class="alinks">
-          <a class="alink" href="https://github.com/LATALIA" target="_blank">⌥&nbsp;GitHub</a>
+          <a class="alink" href="https://github.com/La-Talia" target="_blank">⌥&nbsp;GitHub</a>
           <a class="alink" href="https://codeforces.com/profile/LATALIA" target="_blank">⚡&nbsp;Codeforces</a>
           <a class="alink" href="/cdn-cgi/l/email-protection#e391829b8a97a3869b828e938f86cd808c8e">✉&nbsp;Email</a>
           <a class="alink" href="cf_template.cpp" download>↓&nbsp;CF Template</a>
@@ -393,7 +393,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
 
     <div class="grid" id="grid">
 
-      <a class="card guide" href="graph_theory.html" target="_blank" data-cat="guide">
+      <a class="card guide" href="graph-theory" target="_blank" data-cat="guide">
         <div class="card-top">
           <span class="cat-lbl">GUIDE</span>
           <span class="badge bh">COMPREHENSIVE</span>
@@ -406,7 +406,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
         </div>
       </a>
 
-      <a class="card tool" href="cf_cheatsheet.html" target="_blank" data-cat="tool">
+      <a class="card tool" href="latalia_cf_template" target="_blank" data-cat="tool">
         <div class="card-top">
           <span class="cat-lbl">TOOL</span>
           <span class="badge bt">REFERENCE</span>
@@ -436,8 +436,8 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
           <a class="ci" href="https://codeforces.com/profile/LATALIA" target="_blank">
             <span class="ci-icon">⚡</span><div><div class="ci-lbl">CODEFORCES</div><div class="ci-val">LATALIA</div></div><span class="ci-arr">↗</span>
           </a>
-          <a class="ci" href="https://github.com/LATALIA" target="_blank">
-            <span class="ci-icon">⌥</span><div><div class="ci-lbl">GITHUB</div><div class="ci-val">github.com/LATALIA</div></div><span class="ci-arr">↗</span>
+          <a class="ci" href="https://github.com/La-Talia" target="_blank">
+            <span class="ci-icon">⌥</span><div><div class="ci-lbl">GITHUB</div><div class="ci-val">github.com/La-Talia</div></div><span class="ci-arr">↗</span>
           </a>
           <a class="ci" href="/cdn-cgi/l/email-protection#0476657c6d7044617c65697468612a676b69">
             <span class="ci-icon">✉</span><div><div class="ci-lbl">EMAIL</div><div class="ci-val"><span class="__cf_email__" data-cfemail="e496859c8d90a4819c8589948881ca878b89">[email&#160;protected]</span></div></div><span class="ci-arr">→</span>
@@ -477,7 +477,9 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
   <div class="foot-copy">© 2025 · All inline · GitHub Pages</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
 // ── CURSOR ──────────────────────────────────────────────────
 const cur = document.getElementById('cur');
 const cur2 = document.getElementById('cur2');
@@ -519,14 +521,14 @@ window.addEventListener('scroll', () => {
     ctx.clearRect(0, 0, W, H);
     for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
       const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, d = Math.sqrt(dx*dx+dy*dy);
-      if (d < 155) { ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.strokeStyle = `rgba(0,255,65,${(1 - d / 155) * .13})`; ctx.lineWidth = .8; ctx.stroke(); }
+      if (d < 155) { ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.strokeStyle = 'rgba(0,255,65,' + ((1 - d/155) * .13) + ')'; ctx.lineWidth = .8; ctx.stroke(); }
     }
     nodes.forEach(n => { ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,255,65,.5)'; ctx.fill(); });
   }
   function tick() {
     nodes.forEach(n => {
       const dx = n.x - hx, dy = n.y - hy, d = Math.sqrt(dx*dx+dy*dy);
-      if (d < 100 && d > 0) { const f = (.8 - d / 100) * .7; n.vx += dx / d * f; n.vy += dy / d * f; }
+      if (d < 100 && d > 0) { const f = (.8 - d/100) * .7; n.vx += dx/d*f; n.vy += dy/d*f; }
       n.vx *= .97; n.vy *= .97;
       const sp = Math.sqrt(n.vx*n.vx+n.vy*n.vy);
       if (sp > 1.4) { n.vx = n.vx/sp*1.4; n.vy = n.vy/sp*1.4; }
@@ -543,11 +545,12 @@ window.addEventListener('scroll', () => {
 // ── ROLES ROTATOR ────────────────────────────────────────────
 (function () {
   const strip = document.getElementById('roles-strip');
-  const h = 32; // height(16) + gap(16)
+  if (!strip) return;
+  const h = 32;
   let idx = 0;
   setInterval(() => {
     idx++;
-    strip.style.transform = `translateY(-${idx * h}px)`;
+    strip.style.transform = 'translateY(-' + (idx * h) + 'px)';
     if (idx >= 4) {
       setTimeout(() => {
         strip.style.transition = 'none';
@@ -574,6 +577,7 @@ window.addEventListener('scroll', () => {
     'radix_sort(a); // O(n)',
   ];
   const el = document.getElementById('t-out');
+  if (!el) return;
   let li = 0, ci = 0, del = false, paused = false;
   function type() {
     if (paused) { paused = false; setTimeout(type, 1500); return; }
@@ -595,16 +599,17 @@ window.addEventListener('scroll', () => {
 (function () {
   const items = ['BFS', 'DFS', 'Dijkstra', 'DSU · Union-Find', 'Segment Tree', 'Fenwick Tree', 'Topo Sort', 'Kruskal MST', '0-1 BFS', 'Bellman-Ford', 'Neural Networks', 'PyTorch', 'Computer Vision', 'Robotics', 'CAD Design', 'Embedded Systems', 'IIT ISM Dhanbad'];
   const track = document.getElementById('tick');
+  if (!track) return;
   [...items, ...items].forEach(t => {
     const d = document.createElement('div');
     d.className = 'tick-item';
-    d.innerHTML = `<div class="dot"></div>${t}`;
+    d.innerHTML = '<div class="dot"></div>' + t;
     track.appendChild(d);
   });
 })();
 
 // ── CODEFORCES API ───────────────────────────────────────────
-const CF_HANDLE = 'LATALIA'; // ← set your actual CF handle here
+const CF_HANDLE = 'LATALIA';
 
 const RANK_COLORS = {
   'legendary grandmaster': '#ff0000', 'international grandmaster': '#ff0000',
@@ -612,24 +617,11 @@ const RANK_COLORS = {
   'candidate master': '#aa00aa', expert: '#0000ff', specialist: '#03a89e',
   pupil: '#00aa55', newbie: '#808080'
 };
-function rColor(rank = '') {
-  const r = rank.toLowerCase();
-  for (const k of Object.keys(RANK_COLORS)) if (r.includes(k)) return RANK_COLORS[k];
-  return 'var(--muted)';
+function rColor(rank) {
+  rank = (rank || '').toLowerCase();
+  for (const k of Object.keys(RANK_COLORS)) if (rank.includes(k)) return RANK_COLORS[k];
+  return '#4a5c7a';
 }
-
-async function loadCF() {
-  try {
-    const res = await fetch(`https://codeforces.com/api/user.info?handles=${CF_HANDLE}`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (data.status !== 'OK') throw new Error(data.comment || 'CF API error');
-    renderCF(data.result[0]);
-  } catch (e) {
-    renderCFErr();
-  }
-}
-
 function setAvatar(elId, src) {
   if (!src) return;
   const el = document.getElementById(elId);
@@ -638,86 +630,115 @@ function setAvatar(elId, src) {
   img.src = src; img.alt = CF_HANDLE;
   el.innerHTML = ''; el.appendChild(img);
 }
-
 function renderCF(u) {
-  const rating = u.rating || '—';
+  const rating = u.rating    || '—';
   const max    = u.maxRating || '—';
-  const rank   = u.rank || 'unrated';
-  const maxR   = u.maxRank || 'unrated';
+  const rank   = u.rank      || 'unrated';
+  const maxR   = u.maxRank   || 'unrated';
   const col    = rColor(rank);
   const maxCol = rColor(maxR);
 
-  // nav
+  // nav badge
   const nv = document.getElementById('cf-nav-val');
-  nv.textContent = rating; nv.style.color = col;
+  if (nv) { nv.textContent = rating; nv.style.color = col; }
 
   // hero stat
   const sf = document.getElementById('st-cf');
-  sf.textContent = rating; sf.style.color = col;
+  if (sf) { sf.textContent = rating; sf.style.color = col; }
 
-  // small widget
+  // small float widget
   setAvatar('cf-av', u.titlePhoto);
-  document.getElementById('cf-float-body').innerHTML = `
-    <div class="cf-row">
-      <div class="cf-cell"><div class="cf-val" style="color:${col}">${rating}</div><div class="cf-lbl">RATING</div></div>
-      <div class="cf-cell"><div class="cf-val" style="color:${maxCol}">${max}</div><div class="cf-lbl">MAX</div></div>
-    </div>
-    <div style="font-size:.6rem;color:${col};margin-top:9px;letter-spacing:.08em">${rank.toUpperCase()}</div>`;
+  const fb = document.getElementById('cf-float-body');
+  if (fb) fb.innerHTML =
+    '<div class="cf-row">' +
+      '<div class="cf-cell"><div class="cf-val" style="color:' + col + '">' + rating + '</div><div class="cf-lbl">RATING</div></div>' +
+      '<div class="cf-cell"><div class="cf-val" style="color:' + maxCol + '">' + max + '</div><div class="cf-lbl">MAX</div></div>' +
+    '</div>' +
+    '<div style="font-size:.6rem;color:' + col + ';margin-top:9px;letter-spacing:.08em">' + rank.toUpperCase() + '</div>';
 
   // big panel
   setAvatar('cf-p-av', u.titlePhoto);
   const pr = document.getElementById('cf-p-rank');
-  pr.textContent = rank; pr.style.color = col;
-  document.getElementById('cf-panel-body').innerHTML = `
-    <div class="cf-p-grid">
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:${col}">${rating}</div><div class="cf-p-lbl">CURRENT</div></div>
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:${maxCol}">${max}</div><div class="cf-p-lbl">MAX EVER</div></div>
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:var(--cyan)">${u.contribution || 0}</div><div class="cf-p-lbl">CONTRIB</div></div>
-    </div>
-    <div class="cf-p-footer">
-      Rank: <span style="color:${col}">${rank}</span> · 
-      Max rank: <span style="color:${maxCol}">${maxR}</span><br>
-      ${u.friendOfCount || 0} users follow this profile
-    </div>`;
+  if (pr) { pr.textContent = rank; pr.style.color = col; }
+  const pb2 = document.getElementById('cf-panel-body');
+  if (pb2) pb2.innerHTML =
+    '<div class="cf-p-grid">' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:' + col + '">' + rating + '</div><div class="cf-p-lbl">CURRENT</div></div>' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:' + maxCol + '">' + max + '</div><div class="cf-p-lbl">MAX EVER</div></div>' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:var(--cyan)">' + (u.contribution||0) + '</div><div class="cf-p-lbl">CONTRIB</div></div>' +
+    '</div>' +
+    '<div class="cf-p-footer">Rank: <span style="color:' + col + '">' + rank + '</span> · Max: <span style="color:' + maxCol + '">' + maxR + '</span></div>';
 }
-
 function renderCFErr() {
-  ['cf-nav-val', 'st-cf'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = 'N/A';
-  });
-  document.getElementById('cf-float-body').innerHTML = `<div style="font-size:.6rem;color:var(--muted)">CF API unavailable</div>`;
-  document.getElementById('cf-panel-body').innerHTML = `
-    <div class="cf-p-grid">
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:var(--muted)">—</div><div class="cf-p-lbl">RATING</div></div>
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:var(--muted)">—</div><div class="cf-p-lbl">MAX</div></div>
-      <div class="cf-p-cell"><div class="cf-p-num" style="color:var(--muted)">—</div><div class="cf-p-lbl">CONTRIB</div></div>
-    </div>
-    <div class="cf-p-footer">Set <code style="color:var(--cyan)">CF_HANDLE</code> in script to your username.</div>`;
+  const els = ['cf-nav-val','st-cf'];
+  els.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = 'N/A'; });
+  const fb = document.getElementById('cf-float-body');
+  if (fb) fb.innerHTML = '<div style="font-size:.6rem;color:#4a5c7a">Set CF_HANDLE in script</div>';
+  const pb2 = document.getElementById('cf-panel-body');
+  if (pb2) pb2.innerHTML =
+    '<div class="cf-p-grid">' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:#4a5c7a">—</div><div class="cf-p-lbl">RATING</div></div>' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:#4a5c7a">—</div><div class="cf-p-lbl">MAX</div></div>' +
+      '<div class="cf-p-cell"><div class="cf-p-num" style="color:#4a5c7a">—</div><div class="cf-p-lbl">CONTRIB</div></div>' +
+    '</div>' +
+    '<div class="cf-p-footer">Could not reach Codeforces — update CF_HANDLE to your username.</div>';
 }
-
+async function loadCF() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 6000); // 6s timeout
+    const res = await fetch('https://codeforces.com/api/user.info?handles=' + CF_HANDLE, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'OK') throw new Error(data.comment || 'CF API error');
+    renderCF(data.result[0]);
+  } catch (e) {
+    renderCFErr();
+  }
+}
 loadCF();
 
 // ── LIVE COUNTERS ────────────────────────────────────────────
 function updateCounts() {
   const guides = document.querySelectorAll('#grid .card[data-cat="guide"]').length;
   const tools  = document.querySelectorAll('#grid .card[data-cat="tool"]').length;
-  document.getElementById('st-guides').textContent = guides;
-  document.getElementById('st-tools').textContent  = tools;
-  document.getElementById('live-n').textContent    = guides + tools;
+  const gEl = document.getElementById('st-guides');
+  const tEl = document.getElementById('st-tools');
+  const nEl = document.getElementById('live-n');
+  if (gEl) gEl.textContent = guides;
+  if (tEl) tEl.textContent = tools;
+  if (nEl) nEl.textContent = guides + tools;
 }
 updateCounts();
 
 // ── FILTER ───────────────────────────────────────────────────
-document.getElementById('filters').addEventListener('click', e => {
-  const btn = e.target.closest('.fb'); if (!btn) return;
-  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  const f = btn.dataset.f;
-  document.querySelectorAll('#grid .card').forEach(c => {
-    c.classList.toggle('hidden', f !== 'all' && c.dataset.cat !== f);
+const filtersEl = document.getElementById('filters');
+if (filtersEl) {
+  filtersEl.addEventListener('click', e => {
+    const btn = e.target.closest('.fb'); if (!btn) return;
+    document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const f = btn.dataset.f;
+    document.querySelectorAll('#grid .card').forEach(c => {
+      c.classList.toggle('hidden', f !== 'all' && c.dataset.cat !== f);
+    });
   });
-});
+}
 
 // ── HERO NAME GLITCH ─────────────────────────────────────────
-document.querySelector('.hero-name').addEventL
+const heroName = document.querySelector('.hero-name');
+if (heroName) {
+  heroName.addEventListener('mouseenter', function () {
+    let n = 0;
+    const iv = setInterval(() => {
+      this.style.textShadow = n % 2 ? 'none' : '2px 0 #ff4158, -2px 0 #00d4ff';
+      if (++n > 6) { clearInterval(iv); this.style.textShadow = 'none'; }
+    }, 60);
+  });
+}
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>
