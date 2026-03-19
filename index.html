@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="LATALIA — Competitive Programmer, ML Scientist, Robotics Enthusiast & CAD Expert. IIT ISM Dhanbad.">
+<title>LATALIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════ TOKENS ══════════════════════════ */
+:root{
+  --bg:#04070f; --bg2:#070b16; --surface:#0b1120; --card:#0e1625;
+  --border:#131e33; --border2:#1a2d47;
+  --green:#00ff41; --cyan:#00d4ff; --amber:#ffb830;
+  --red:#ff4158; --purple:#a78bfa; --rose:#ff6b8a;
+  --text:#dde4f0; --muted:#4a5c7a; --dim:#283550;
+  --mono:'IBM Plex Mono',monospace;
+  --serif:'Instrument Serif',serif;
+  --display:'Bebas Neue',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);overflow-x:hidden;cursor:none;}
+a{color:inherit;text-decoration:none;}
+::selection{background:rgba(0,255,65,.15);color:var(--green);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--dim);}
+
+/* ═══════════════════════════ CURSOR ══════════════════════════ */
+#cur{position:fixed;z-index:9999;pointer-events:none;width:28px;height:28px;border:1px solid var(--green);border-radius:50%;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s,opacity .2s;mix-blend-mode:difference;}
+#cur2{position:fixed;z-index:9999;pointer-events:none;width:5px;height:5px;background:var(--green);border-radius:50%;transform:translate(-50%,-50%);transition:left .04s,top .04s;}
+.hoverable:hover~#cur,.hoverable:hover{cursor:none;}
+body.cursor-hover #cur{width:50px;height:50px;border-color:var(--cyan);}
+
+/* ═══════════════════════════ SCANLINE ═════════════════════════ */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);opacity:.5;}
+
+/* ═══════════════════════════ NAV ══════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;padding:0 52px;transition:background .3s,border-color .3s;border-bottom:1px solid transparent;}
+nav.scrolled{background:rgba(4,7,15,.94);backdrop-filter:blur(16px);border-bottom-color:var(--border);}
+.nav-logo{font-family:var(--display);font-size:1.5rem;letter-spacing:.06em;color:var(--green);line-height:1;margin-right:auto;}
+.nav-links{display:flex;gap:32px;list-style:none;font-size:.68rem;letter-spacing:.14em;}
+.nav-links a{color:var(--muted);transition:color .15s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--green);transform:scaleX(0);transition:transform .2s;}
+.nav-links a:hover{color:var(--green);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-right{display:flex;align-items:center;gap:14px;margin-left:36px;}
+#cf-nav-badge{display:flex;align-items:center;gap:7px;font-size:.66rem;padding:5px 12px;border:1px solid var(--border2);border-radius:3px;background:var(--surface);transition:border-color .2s;}
+#cf-nav-badge:hover{border-color:var(--amber);}
+.cf-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,184,48,.4);}50%{opacity:.8;box-shadow:0 0 0 4px rgba(255,184,48,0);}}
+#cf-nav-rating{color:var(--amber);font-weight:600;}
+
+/* ═══════════════════════════ HERO ══════════════════════════════ */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 52px 72px;overflow:hidden;}
+#hero-canvas{position:absolute;inset:0;z-index:0;}
+.hero-grain{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;}
+.hero-content{position:relative;z-index:2;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:.64rem;letter-spacing:.2em;color:var(--muted);}
+.hero-eyebrow span{color:var(--green);}
+.hero-eyebrow-line{width:32px;height:1px;background:var(--green);}
+
+/* Roles rotator */
+.hero-roles{font-size:.72rem;letter-spacing:.14em;color:var(--muted);margin-bottom:18px;height:18px;overflow:hidden;}
+.roles-track{display:flex;flex-direction:column;gap:18px;transition:transform .6s cubic-bezier(.23,1,.32,1);}
+.role-item{display:flex;align-items:center;gap:10px;height:18px;}
+.role-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+.hero-name{font-family:var(--display);font-size:clamp(6rem,15vw,15rem);line-height:.88;letter-spacing:-.01em;color:var(--text);margin-bottom:36px;position:relative;display:inline-block;}
+.hero-name .outline{-webkit-text-stroke:1.5px rgba(0,255,65,.25);color:transparent;}
+.hero-name .solid{color:var(--green);}
+
+.hero-bottom{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:28px;}
+.hero-tagline{font-family:var(--serif);font-style:italic;font-size:clamp(.95rem,2vw,1.35rem);color:var(--muted);max-width:460px;line-height:1.6;}
+.hero-tagline em{color:var(--text);font-style:normal;}
+
+/* live stats strip */
+.hero-stats{display:flex;gap:0;}
+.hstat{padding:0 28px;border-left:1px solid var(--border2);text-align:right;}
+.hstat:first-child{border-left:none;padding-left:0;}
+.hstat-num{font-family:var(--display);font-size:2rem;line-height:1;display:flex;align-items:baseline;gap:3px;}
+.hstat-val{color:var(--green);}
+.hstat-unit{font-family:var(--mono);font-size:.55rem;color:var(--muted);}
+.hstat-label{font-size:.55rem;color:var(--muted);letter-spacing:.14em;margin-top:3px;}
+
+/* hero scroll hint */
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:.56rem;letter-spacing:.2em;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:8px;animation:bob 2.4s ease infinite;}
+.hero-scroll::after{content:'';width:1px;height:36px;background:linear-gradient(var(--dim),transparent);}
+@keyframes bob{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0);}60%{opacity:.7;transform:translateX(-50%) translateY(-5px);}}
+
+/* ═══════════════════════════ TERMINAL ═════════════════════════ */
+.terminal{position:absolute;top:76px;right:52px;z-index:3;width:clamp(250px,26vw,340px);background:rgba(7,11,22,.88);border:1px solid var(--border2);border-radius:8px;overflow:hidden;backdrop-filter:blur(14px);animation:fadeUp .7s .3s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.term-bar{display:flex;align-items:center;gap:7px;padding:9px 13px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015);}
+.tdot{width:9px;height:9px;border-radius:50%;}
+.t1{background:#ff5f57;}.t2{background:#febc2e;}.t3{background:#28c840;}
+.term-label{font-size:.58rem;color:var(--muted);margin-left:auto;}
+.term-body{padding:12px 14px;font-size:.7rem;line-height:1.85;min-height:130px;}
+.t-prompt{color:var(--green);}
+.t-cursor{display:inline-block;width:6px;height:13px;background:var(--green);vertical-align:middle;animation:blink .85s step-end infinite;margin-left:1px;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ═══════════════════════════ CF CARD WIDGET ════════════════════ */
+.cf-widget{position:absolute;bottom:72px;right:52px;z-index:3;width:clamp(220px,22vw,280px);background:rgba(7,11,22,.9);border:1px solid var(--border2);border-radius:8px;padding:18px;backdrop-filter:blur(14px);animation:fadeUp .7s .5s both;}
+.cf-widget-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.cf-avatar{width:36px;height:36px;border-radius:6px;background:var(--surface);border:1px solid var(--border2);object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.cf-handle{font-size:.72rem;color:var(--text);font-weight:600;}
+.cf-institute{font-size:.58rem;color:var(--muted);margin-top:2px;}
+.cf-stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cf-stat{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:8px 10px;}
+.cf-stat-val{font-family:var(--display);font-size:1.2rem;line-height:1;}
+.cf-stat-lbl{font-size:.55rem;color:var(--muted);letter-spacing:.1em;margin-top:2px;}
+.cf-loading{font-size:.65rem;color:var(--muted);text-align:center;padding:8px 0;}
+.rank-pupil{color:#00aa55;} .rank-specialist{color:#03a89e;} .rank-expert{color:#0000ff;} .rank-cm{color:#aa00aa;} .rank-master,.rank-im{color:#ff8c00;} .rank-gm,.rank-lgm{color:#ff0000;} .rank-newbie{color:#808080;}
+
+/* ═══════════════════════════ SECTION BASE ═════════════════════ */
+section{position:relative;z-index:1;}
+.si{padding:90px 52px;}
+.s-eyebrow{font-size:.6rem;letter-spacing:.22em;color:var(--green);margin-bottom:10px;}
+.s-eyebrow::before{content:'// ';color:var(--dim);}
+.s-title{font-family:var(--display);font-size:clamp(2.6rem,5.5vw,5rem);line-height:1;letter-spacing:.02em;color:var(--text);margin-bottom:16px;}
+.s-line{width:48px;height:2px;background:var(--green);margin-bottom:56px;}
+
+/* ═══════════════════════════ TICKER ═══════════════════════════ */
+.ticker{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 0;overflow:hidden;background:var(--bg2);}
+.ticker-track{display:flex;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-item{flex-shrink:0;padding:0 36px;font-size:.64rem;letter-spacing:.12em;color:var(--dim);display:flex;align-items:center;gap:14px;}
+.ticker-item .dot{width:4px;height:4px;border-radius:50%;background:var(--green);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ═══════════════════════════ ABOUT ════════════════════════════ */
+#about{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-layout{display:grid;grid-template-columns:5fr 4fr;gap:72px;align-items:start;}
+.about-text p{font-size:.88rem;line-height:1.95;color:var(--muted);margin-bottom:18px;}
+.about-text em{color:var(--text);font-style:normal;}
+.about-text strong{color:var(--green);font-weight:600;}
+.about-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
+.alink{display:inline-flex;align-items:center;gap:8px;font-size:.67rem;letter-spacing:.08em;color:var(--muted);padding:8px 16px;border:1px solid var(--border2);border-radius:3px;transition:all .2s;cursor:none;}
+.alink:hover{color:var(--text);border-color:var(--cyan);background:rgba(0,212,255,.04);}
+
+/* discipline cards */
+.disciplines{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.disc-card{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:16px;transition:border-color .2s,transform .2s;position:relative;overflow:hidden;}
+.disc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .25s;}
+.disc-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.disc-card:hover::before{opacity:1;}
+.dc-cp::before{background:linear-gradient(90deg,var(--green),var(--cyan));}
+.dc-ml::before{background:linear-gradient(90deg,var(--purple),var(--rose));}
+.dc-rob::before{background:linear-gradient(90deg,var(--amber),var(--red));}
+.dc-cad::before{background:linear-gradient(90deg,var(--cyan),var(--purple));}
+.disc-icon{font-size:1.3rem;margin-bottom:8px;}
+.disc-name{font-size:.75rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.disc-sub{font-size:.62rem;color:var(--muted);line-height:1.5;}
+.institute-badge{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:14px 16px;}
+.inst-icon{font-size:1.2rem;flex-shrink:0;}
+.inst-name{font-size:.72rem;color:var(--text);}
+.inst-sub{font-size:.6rem;color:var(--muted);margin-top:2px;}
+
+/* ═══════════════════════════ WORK ══════════════════════════════ */
+.work-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:16px;}
+.live-count{font-size:.65rem;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:5px 14px;display:flex;align-items:center;gap:8px;}
+.live-count .dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+.live-count span{color:var(--green);font-weight:700;}
+
+/* filter */
+.filter-row{display:flex;gap:4px;margin-bottom:32px;flex-wrap:wrap;}
+.fbtn{font-size:.62rem;letter-spacing:.12em;padding:7px 16px;border:1px solid var(--border);border-radius:2px;background:transparent;color:var(--muted);cursor:none;transition:all .15s;}
+.fbtn:hover{border-color:var(--border2);color:var(--text);}
+.fbtn.active{border-color:var(--green);color:var(--green);background:rgba(0,255,65,.05);}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.card{background:var(--card);padding:28px;cursor:none;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;transition:background .2s;}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .35s ease;}
+.card.cat-guide::after{background:linear-gradient(90deg,var(--green),var(--cyan));}
+.card.cat-tool::after{background:linear-gradient(90deg,var(--cyan),var(--purple));}
+.card:hover{background:var(--surface);}
+.card:hover::after{transform:scaleX(1);}
+.card.hidden{display:none;}
+.card-top{display:flex;align-items:center;justify-content:space-between;}
+.card-cat-label{font-size:.56rem;letter-spacing:.18em;color:var(--muted);}
+.card-badge{font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:2px;}
+.badge-guide{background:rgba(0,255,65,.1);color:var(--green);}
+.badge-tool{background:rgba(0,212,255,.1);color:var(--cyan);}
+.badge-hard{background:rgba(255,107,138,.1);color:var(--rose);}
+.card-title{font-family:var(--serif);font-size:1.15rem;line-height:1.3;color:var(--text);}
+.card-desc{font-size:.74rem;color:var(--muted);line-height:1.75;flex:1;}
+.card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border);}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{font-size:.56rem;padding:2px 7px;background:var(--border);color:var(--muted);border-radius:2px;}
+.card-arr{font-size:.8rem;color:var(--muted);transition:transform .2s,color .2s;}
+.card:hover .card-arr{transform:translate(4px,-4px);color:var(--green);}
+
+/* ═══════════════════════════ FEATURED ═════════════════════════ */
+.featured{background:var(--card);border:1px solid var(--border);border-radius:8px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;margin-bottom:64px;transition:border-color .2s;cursor:none;}
+.featured:hover{border-color:var(--border2);}
+.feat-visual{background:var(--bg);position:relative;overflow:hidden;min-height:300px;display:flex;align-items:center;justify-content:center;}
+.feat-visual canvas{position:absolute;inset:0;opacity:.8;}
+.feat-glyph{position:relative;z-index:1;font-family:var(--display);font-size:4rem;color:var(--green);line-height:1;text-align:center;text-shadow:0 0 40px rgba(0,255,65,.3);}
+.feat-glyph small{display:block;font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:.15em;margin-top:4px;}
+.feat-body{padding:40px;}
+.feat-label{font-size:.57rem;letter-spacing:.2em;color:var(--green);margin-bottom:12px;}
+.feat-title{font-family:var(--display);font-size:2.2rem;line-height:1.1;color:var(--text);margin-bottom:14px;}
+.feat-desc{font-size:.78rem;color:var(--muted);line-height:1.85;margin-bottom:20px;}
+.feat-list{margin-bottom:28px;}
+.feat-list li{font-size:.7rem;color:var(--muted);list-style:none;display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.feat-list li::before{content:'→';color:var(--green);font-size:.65rem;}
+.feat-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-fill{font-size:.67rem;letter-spacing:.1em;padding:10px 20px;background:var(--green);color:var(--bg);border:none;border-radius:3px;cursor:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn-fill:hover{background:#00ff70;transform:translateY(-1px);}
+.btn-outline{font-size:.67rem;letter-spacing:.1em;padding:10px 20px;background:transparent;color:var(--muted);border:1px solid var(--border2);border-radius:3px;cursor:none;transition:all .2s;}
+.btn-outline:hover{color:var(--text);border-color:var(--cyan);}
+
+/* ═══════════════════════════ CONTACT ═══════════════════════════ */
+#contact{background:var(--bg2);border-top:1px solid var(--border);}
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.contact-text{font-size:.85rem;color:var(--muted);line-height:1.85;margin-bottom:32px;}
+.contact-items{display:flex;flex-direction:column;gap:12px;}
+.citem{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:6px;transition:border-color .2s,background .2s;cursor:none;}
+.citem:hover{border-color:var(--green);background:var(--surface);}
+.ci-icon{font-size:1rem;flex-shrink:0;}
+.ci-lbl{font-size:.56rem;letter-spacing:.12em;color:var(--muted);margin-bottom:2px;}
+.ci-val{font-size:.76rem;color:var(--text);}
+.ci-arr{margin-left:auto;font-size:.75rem;color:var(--muted);transition:all .2s;}
+.citem:hover .ci-arr{color:var(--green);transform:translate(2px,-2px);}
+
+/* right panel */
+.cf-big-widget{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px;}
+.cbw-title{font-size:.6rem;letter-spacing:.18em;color:var(--green);margin-bottom:18px;}
+.cbw-profile{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.cbw-avatar{width:48px;height:48px;border-radius:8px;background:var(--surface);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.cbw-handle{font-size:.95rem;font-weight:700;color:var(--text);}
+.cbw-rank{font-size:.68rem;margin-top:3px;}
+.cbw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.cbw-cell{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:12px;text-align:center;}
+.cbw-num{font-family:var(--display);font-size:1.5rem;line-height:1;}
+.cbw-lbl{font-size:.54rem;color:var(--muted);letter-spacing:.1em;margin-top:3px;}
+.cbw-loading{font-size:.7rem;color:var(--muted);text-align:center;padding:20px 0;}
+
+/* ═══════════════════════════ FOOTER ════════════════════════════ */
+footer{padding:36px 52px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-brand{display:flex;flex-direction:column;gap:3px;}
+.foot-logo{font-family:var(--display);font-size:1.2rem;letter-spacing:.06em;color:var(--green);}
+.foot-real{font-size:.58rem;color:var(--dim);letter-spacing:.08em;}
+.foot-links{display:flex;gap:24px;font-size:.62rem;letter-spacing:.1em;color:var(--muted);}
+.foot-links a{transition:color .15s;}
+.foot-links a:hover{color:var(--green);}
+.foot-copy{font-size:.58rem;color:var(--dim);}
+
+/* ═══════════════════════════ REVEAL ════════════════════════════ */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.in{opacity:1;transform:none;}
+.d1{transition-delay:.08s;}.d2{transition-delay:.16s;}.d3{transition-delay:.24s;}.d4{transition-delay:.32s;}
+
+/* ═══════════════════════════ RESPONSIVE ═══════════════════════ */
+@media(max-width:1024px){
+  nav{padding:0 28px;}
+  .nav-links{display:none;}
+  .terminal,.cf-widget{display:none;}
+  .hero{padding:0 28px 60px;}
+  .si{padding:72px 28px;}
+  .about-layout,.contact-layout,.featured{grid-template-columns:1fr;}
+  footer{padding:28px;}
+}
+@media(max-width:600px){
+  .hero-name{font-size:5.5rem;}
+  .hero-stats{flex-direction:column;gap:16px;align-items:flex-start;}
+  .hstat{border-left:none;padding-left:0;text-align:left;}
+  .disciplines{grid-template-columns:1fr;}
+  .cards{grid-template-columns:1fr;}
+  .hero-bottom{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav id="nav">
+  <span class="nav-logo">LATALIA</span>
+  <ul class="nav-links">
+    <li><a href="#about">ABOUT</a></li>
+    <li><a href="#work">WORK</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+  <div class="nav-right">
+    <div id="cf-nav-badge" title="Codeforces Rating">
+      <div class="cf-dot"></div>
+      <span style="font-size:.6rem;color:var(--muted);letter-spacing:.08em">CF</span>
+      <span id="cf-nav-rating">—</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero" id="home">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-grain"></div>
+
+  <!-- typing terminal -->
+  <div class="terminal">
+    <div class="term-bar">
+      <div class="tdot t1"></div><div class="tdot t2"></div><div class="tdot t3"></div>
+      <span class="term-label">solution.cpp</span>
+    </div>
+    <div class="term-body">
+      <div style="display:flex;gap:8px;margin-bottom:4px;color:var(--dim);font-size:.62rem">
+        <span style="color:var(--green)">/*</span> LATALIA's CF Template v3 <span style="color:var(--green)">*/</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <span class="t-prompt">›</span>
+        <span id="t-out"></span><span class="t-cursor"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CF widget -->
+  <div class="cf-widget" id="cf-widget">
+    <div class="cf-widget-top">
+      <div class="cf-avatar" id="cf-avatar">🧑‍💻</div>
+      <div>
+        <div class="cf-handle" id="cf-handle">LATALIA</div>
+        <div class="cf-institute">IIT ISM Dhanbad</div>
+      </div>
+    </div>
+    <div id="cf-widget-body" class="cf-loading">Fetching rating…</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-line"></div>
+      <span>IIT ISM DHANBAD</span>
+      <span style="color:var(--dim)">·</span>
+      <span>BTECH 1<sup style="font-size:.5rem">ST</sup> YEAR</span>
+    </div>
+
+    <!-- roles rotator -->
+    <div class="hero-roles">
+      <div class="roles-track" id="roles-track">
+        <div class="role-item"><div class="role-dot" style="background:var(--green)"></div><span>COMPETITIVE PROGRAMMER</span></div>
+        <div class="role-item"><div class="role-dot" style="background:var(--purple)"></div><span>MACHINE LEARNING SCIENTIST</span></div>
+        <div class="role-item"><div class="role-dot" style="background:var(--amber)"></div><span>ROBOTICS ENTHUSIAST</span></div>
+        <div class="role-item"><div class="role-dot" style="background:var(--cyan)"></div><span>CAD EXPERT</span></div>
+        <div class="role-item"><div class="role-dot" style="background:var(--green)"></div><span>COMPETITIVE PROGRAMMER</span></div>
+      </div>
+    </div>
+
+    <h1 class="hero-name">
+      <span class="solid">L</span>ATALI<span class="outline">A</span>
+    </h1>
+
+    <div class="hero-bottom">
+      <p class="hero-tagline">
+        Writing <em>fast code</em>, training <em>smart models</em>,
+        building <em>real machines</em> — and leaving clear guides
+        for everyone who comes after.
+      </p>
+      <div class="hero-stats" id="hero-stats">
+        <div class="hstat">
+          <div class="hstat-num"><span class="hstat-val" id="stat-guides">0</span><span class="hstat-unit">&nbsp;TOTAL</span></div>
+          <div class="hstat-label">GUIDES</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num"><span class="hstat-val" id="stat-tools">0</span><span class="hstat-unit">&nbsp;TOTAL</span></div>
+          <div class="hstat-label">TOOLS / PROJECTS</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num"><span class="hstat-val" id="stat-cf">—</span><span class="hstat-unit" id="stat-cf-unit">&nbsp;RATING</span></div>
+          <div class="hstat-label">CODEFORCES</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<!-- ═══════════ TICKER ═══════════ -->
+<div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+
+<!-- ═══════════ ABOUT ═══════════ -->
+<section id="about">
+  <div class="si">
+    <div class="s-eyebrow reveal">ABOUT ME</div>
+    <h2 class="s-title reveal d1">WHO<br>AM I</h2>
+    <div class="s-line reveal d2"></div>
+
+    <div class="about-layout">
+      <div class="about-text reveal d2">
+        <p>I'm <em>Raxit Gupta</em> — a first-year BTech student at <strong>IIT ISM Dhanbad</strong>, known online as <strong>LATALIA</strong>. I live at the intersection of code and hardware, splitting my time between competitive programming arenas, machine learning experiments, robotics builds, and CAD workbenches.</p>
+        <p>This site is my <em>public notebook</em> — every guide here exists because I got stuck on that exact topic and couldn't find a clear explanation. If it helps someone get unstuck, it was worth writing.</p>
+        <p>On the CP side, I compete on <strong>Codeforces</strong> using a custom C++ template that brings Python's ergonomics to contest-speed code. On the ML side, I explore neural architectures and practical deep learning. On the robotics and CAD side, I <em>build things that move</em>.</p>
+        <div class="about-links">
+          <a class="alink" href="https://github.com/LATALIA" target="_blank"><span>⌥</span> GitHub</a>
+          <a class="alink" href="https://codeforces.com/profile/LATALIA" target="_blank"><span>⚡</span> Codeforces</a>
+          <a class="alink" href="mailto:raxit@example.com"><span>✉</span> Email</a>
+          <a class="alink" href="cf_template.cpp" download><span>↓</span> CF Template</a>
+        </div>
+      </div>
+
+      <div class="reveal d3">
+        <div class="disciplines">
+          <div class="disc-card dc-cp">
+            <div class="disc-icon">⚡</div>
+            <div class="disc-name">Competitive Programming</div>
+            <div class="disc-sub">C++17 · Graphs · DP<br>Codeforces · DSA</div>
+          </div>
+          <div class="disc-card dc-ml">
+            <div class="disc-icon">🧠</div>
+            <div class="disc-name">Machine Learning</div>
+            <div class="disc-sub">Neural Networks · CV<br>Python · PyTorch</div>
+          </div>
+          <div class="disc-card dc-rob">
+            <div class="disc-icon">🤖</div>
+            <div class="disc-name">Robotics</div>
+            <div class="disc-sub">Embedded Systems<br>Sensors · Control</div>
+          </div>
+          <div class="disc-card dc-cad">
+            <div class="disc-icon">📐</div>
+            <div class="disc-name">CAD</div>
+            <div class="disc-sub">3D Modelling<br>Mechanical Design</div>
+          </div>
+        </div>
+        <div class="institute-badge">
+          <div class="inst-icon">🎓</div>
+          <div>
+            <div class="inst-name">IIT ISM Dhanbad</div>
+            <div class="inst-sub">BTech · Year 1 · Jharkhand, India</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ WORK ═══════════ -->
+<section id="work">
+  <div class="si">
+    <div class="work-header reveal">
+      <div>
+        <div class="s-eyebrow">PROJECTS &amp; GUIDES</div>
+        <h2 class="s-title">MY<br>WORK</h2>
+        <div class="s-line"></div>
+      </div>
+      <div class="live-count">
+        <div class="dot"></div>
+        <span id="live-count-text">—</span>&nbsp;published
+      </div>
+    </div>
+
+    <!-- Featured -->
+    <a class="featured reveal d1" href="cf_template.cpp" download>
+      <div class="feat-visual">
+        <canvas id="feat-canvas"></canvas>
+        <div class="feat-glyph">CF++<small>TEMPLATE v3</small></div>
+      </div>
+      <div class="feat-body">
+        <div class="feat-label">FEATURED TOOL — C++ COMPETITIVE PROGRAMMING</div>
+        <div class="feat-title">Python-Style C++ Template</div>
+        <p class="feat-desc">A 300-line C++ template bringing Python's clean syntax to competitive programming. Write <code style="color:var(--cyan);font-size:.76rem">sorted(a)</code>, <code style="color:var(--cyan);font-size:.76rem">counter(a)</code>, <code style="color:var(--cyan);font-size:.76rem">bfs(g,src)</code> — no STL boilerplate, just solve.</p>
+        <ul class="feat-list">
+          <li>60+ Python-equivalent functions</li>
+          <li>BFS, Dijkstra, DSU, SegTree, KMP built-in</li>
+          <li>Compiles C++14 &amp; C++17, zero warnings</li>
+          <li>Companion interactive HTML cheatsheet</li>
+        </ul>
+        <div class="feat-btns">
+          <span class="btn-fill">↓ Download .cpp</span>
+          <a class="btn-outline" href="cf_cheatsheet.html" target="_blank" onclick="e=>e.preventDefault()">Cheatsheet →</a>
+        </div>
+      </div>
+    </a>
+
+    <!-- Filter row -->
+    <div class="filter-row reveal d1" id="filter-btns">
+      <button class="fbtn active" data-filter="all">ALL</button>
+      <button class="fbtn" data-filter="guide">GUIDES</button>
+      <button class="fbtn" data-filter="tool">TOOLS</button>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="cards reveal d2" id="cards-grid">
+
+      <a class="card cat-guide" href="graph_theory.html" target="_blank" data-cat="guide">
+        <div class="card-top">
+          <span class="card-cat-label">GUIDE</span>
+          <span class="card-badge badge-hard">COMPREHENSIVE</span>
+        </div>
+        <h3 class="card-title">Graph Theory — Zero to Codeforces</h3>
+        <p class="card-desc">From "what is a node?" to solving Codeforces problems. BFS, DFS, Dijkstra, DSU, Topo Sort, Kruskal — all with live SVG animations and 6 fully worked CF problems.</p>
+        <div class="card-foot">
+          <div class="card-tags"><span class="tag">Graphs</span><span class="tag">BFS</span><span class="tag">Dijkstra</span><span class="tag">Interactive</span></div>
+          <span class="card-arr">↗</span>
+        </div>
+      </a>
+
+      <a class="card cat-tool" href="cf_template.cpp" download data-cat="tool">
+        <div class="card-top">
+          <span class="card-cat-label">TOOL</span>
+          <span class="card-badge badge-tool">TEMPLATE</span>
+        </div>
+        <h3 class="card-title">C++ Competitive Programming Template</h3>
+        <p class="card-desc">Python-style C++ with 60+ functions — sorted(), counter(), bfs(), dijkstra() and more. Paste at top of every CF submission. Works on C++14 and C++17.</p>
+        <div class="card-foot">
+          <div class="card-tags"><span class="tag">C++17</span><span class="tag">C++14</span><span class="tag">STL</span></div>
+          <span class="card-arr">↓</span>
+        </div>
+      </a>
+
+      <a class="card cat-tool" href="cf_cheatsheet.html" target="_blank" data-cat="tool">
+        <div class="card-top">
+          <span class="card-cat-label">TOOL</span>
+          <span class="card-badge badge-tool">REFERENCE</span>
+        </div>
+        <h3 class="card-title">Interactive Template Cheatsheet</h3>
+        <p class="card-desc">Every template function with its Python equivalent, click-to-expand usage examples, O(n) complexity notes, and one-click copy. Filterable by category.</p>
+        <div class="card-foot">
+          <div class="card-tags"><span class="tag">Interactive</span><span class="tag">HTML</span><span class="tag">Reference</span></div>
+          <span class="card-arr">↗</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact">
+  <div class="si">
+    <div class="s-eyebrow reveal">GET IN TOUCH</div>
+    <h2 class="s-title reveal d1">REACH<br>OUT</h2>
+    <div class="s-line reveal d2"></div>
+
+    <div class="contact-layout">
+      <div class="reveal d2">
+        <p class="contact-text">Found a bug in the template? Have a question about an algorithm? Want to discuss ML, robotics, or CAD? I'm always happy to talk.</p>
+        <div class="contact-items">
+          <a class="citem" href="https://codeforces.com/profile/LATALIA" target="_blank">
+            <span class="ci-icon">⚡</span>
+            <div><div class="ci-lbl">CODEFORCES</div><div class="ci-val">LATALIA</div></div>
+            <span class="ci-arr">↗</span>
+          </a>
+          <a class="citem" href="https://github.com/LATALIA" target="_blank">
+            <span class="ci-icon">⌥</span>
+            <div><div class="ci-lbl">GITHUB</div><div class="ci-val">github.com/LATALIA</div></div>
+            <span class="ci-arr">↗</span>
+          </a>
+          <a class="citem" href="mailto:raxit@example.com">
+            <span class="ci-icon">✉</span>
+            <div><div class="ci-lbl">EMAIL</div><div class="ci-val">raxit@example.com</div></div>
+            <span class="ci-arr">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Big CF widget -->
+      <div class="reveal d3">
+        <div class="cf-big-widget">
+          <div class="cbw-title">// CODEFORCES LIVE STATS</div>
+          <div class="cbw-profile">
+            <div class="cbw-avatar" id="cbw-avatar">🧑‍💻</div>
+            <div>
+              <div class="cbw-handle" id="cbw-handle">LATALIA</div>
+              <div class="cbw-rank" id="cbw-rank" style="color:var(--muted);font-size:.66rem">Fetching…</div>
+            </div>
+          </div>
+          <div id="cbw-content" class="cbw-loading">Loading Codeforces data…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-brand">
+    <div class="foot-logo">LATALIA</div>
+    <div class="foot-real">Raxit Gupta · IIT ISM Dhanbad · BTech Year 1</div>
+  </div>
+  <div class="foot-links">
+    <a href="#home">TOP</a>
+    <a href="#about">ABOUT</a>
+    <a href="#work">WORK</a>
+    <a href="https://github.com/LATALIA" target="_blank">GITHUB ↗</a>
+    <a href="https://codeforces.com/profile/LATALIA" target="_blank">CODEFORCES ↗</a>
+  </div>
+  <div class="foot-copy">© 2025 · All CSS &amp; JS inline · GitHub Pages</div>
+</footer>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════════════════ */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur2.style.left=mx+'px';cur2.style.top=my+'px';
+});
+(function animCur(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  cur.style.left=rx+'px';cur.style.top=ry+'px';
+  requestAnimationFrame(animCur);
+})();
+document.querySelectorAll('a,button,.card,.citem,.disc-card,.featured,.cf-widget').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+});
+
+/* ═══════════════════════════════════════════════════
+   NAV SCROLL
+═══════════════════════════════════════════════════ */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
+});
+
+/* ═══════════════════════════════════════════════════
+   CODEFORCES API
+═══════════════════════════════════════════════════ */
+const CF_HANDLE = 'LATALIA'; // ← change to your actual CF handle
+
+const RANK_COLORS = {
+  newbie:'#808080',pupil:'#00aa55',specialist:'#03a89e',
+  expert:'#0000ff','candidate master':'#aa00aa',
+  master:'#ff8c00','international master':'#ff8c00',
+  grandmaster:'#ff0000','international grandmaster':'#ff0000',
+  'legendary grandmaster':'#ff0000'
+};
+function rankColor(rank=''){
+  const r=rank.toLowerCase();
+  for(const k of Object.keys(RANK_COLORS)) if(r.includes(k)) return RANK_COLORS[k];
+  return 'var(--muted)';
+}
+
+async function fetchCF(){
+  try{
+    const res = await fetch(`https://codeforces.com/api/user.info?handles=${CF_HANDLE}`);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    if(data.status !== 'OK') throw new Error(data.comment||'CF error');
+    const u = data.result[0];
+    renderCF(u);
+  } catch(e){
+    console.warn('CF API:',e.message);
+    renderCFOffline();
+  }
+}
+
+function renderCF(u){
+  const rating   = u.rating    || '—';
+  const maxRating= u.maxRating || '—';
+  const rank     = u.rank      || 'unrated';
+  const maxRank  = u.maxRank   || 'unrated';
+  const color    = rankColor(rank);
+
+  // nav badge
+  document.getElementById('cf-nav-rating').textContent = rating;
+  document.getElementById('cf-nav-rating').style.color = color;
+
+  // hero stat
+  document.getElementById('stat-cf').textContent = rating;
+  document.getElementById('stat-cf').style.color = color;
+
+  // small widget (hero)
+  if(u.titlePhoto) {
+    const img = document.createElement('img');
+    img.src = u.titlePhoto; img.alt = u.handle;
+    img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:6px;';
+    document.getElementById('cf-avatar').innerHTML=''; document.getElementById('cf-avatar').appendChild(img);
+  }
+  document.getElementById('cf-handle').textContent = u.handle;
+  document.getElementById('cf-widget-body').innerHTML=`
+    <div class="cf-stats-row">
+      <div class="cf-stat"><div class="cf-stat-val" style="color:${color}">${rating}</div><div class="cf-stat-lbl">RATING</div></div>
+      <div class="cf-stat"><div class="cf-stat-val" style="color:${rankColor(maxRank)}">${maxRating}</div><div class="cf-stat-lbl">MAX RATING</div></div>
+    </div>
+    <div style="font-size:.62rem;color:${color};margin-top:10px;letter-spacing:.08em">${rank.toUpperCase()}</div>`;
+
+  // big widget (contact)
+  if(u.titlePhoto){
+    const img2=document.createElement('img');
+    img2.src=u.titlePhoto;img2.alt=u.handle;
+    img2.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:6px;';
+    document.getElementById('cbw-avatar').innerHTML='';document.getElementById('cbw-avatar').appendChild(img2);
+  }
+  document.getElementById('cbw-handle').textContent=u.handle;
+  document.getElementById('cbw-rank').textContent=rank;
+  document.getElementById('cbw-rank').style.color=color;
+  document.getElementById('cbw-content').innerHTML=`
+    <div class="cbw-grid">
+      <div class="cbw-cell"><div class="cbw-num" style="color:${color}">${rating}</div><div class="cbw-lbl">CURRENT</div></div>
+      <div class="cbw-cell"><div class="cbw-num" style="color:${rankColor(maxRank)}">${maxRating}</div><div class="cbw-lbl">MAX EVER</div></div>
+      <div class="cbw-cell"><div class="cbw-num" style="color:var(--cyan)">${u.contribution||0}</div><div class="cbw-lbl">CONTRIB</div></div>
+    </div>
+    <div style="margin-top:14px;font-size:.64rem;color:var(--muted);line-height:1.7">
+      <span style="color:${color}">${rank}</span> · max: <span style="color:${rankColor(maxRank)}">${maxRank}</span><br>
+      ${u.friendOfCount||0} users have this person as friend
+    </div>`;
+}
+
+function renderCFOffline(){
+  // Show placeholder when API unavailable
+  ['cf-nav-rating','stat-cf'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.textContent='N/A';el.title='CF API unavailable';}
+  });
+  document.getElementById('cf-widget-body').innerHTML=`<div style="font-size:.62rem;color:var(--muted)">API unavailable — check codeforces.com/profile/${CF_HANDLE}</div>`;
+  document.getElementById('cbw-content').innerHTML=`
+    <div class="cbw-grid">
+      <div class="cbw-cell"><div class="cbw-num" style="color:var(--muted)">—</div><div class="cbw-lbl">RATING</div></div>
+      <div class="cbw-cell"><div class="cbw-num" style="color:var(--muted)">—</div><div class="cbw-lbl">MAX</div></div>
+      <div class="cbw-cell"><div class="cbw-num" style="color:var(--muted)">—</div><div class="cbw-lbl">CONTRIB</div></div>
+    </div>
+    <div style="margin-top:10px;font-size:.62rem;color:var(--muted)">Could not reach Codeforces API.<br>Update CF_HANDLE in script to your username.</div>`;
+}
+
+fetchCF();
+
+/* ═══════════════════════════════════════════════════
+   DYNAMIC COUNTERS (count actual published cards)
+═══════════════════════════════════════════════════ */
+function countPublished(){
+  const guides = document.querySelectorAll('#cards-grid .card[data-cat="guide"]').length;
+  const tools  = document.querySelectorAll('#cards-grid .card[data-cat="tool"]').length;
+  const total  = guides + tools;
+
+  document.getElementById('stat-guides').textContent = guides;
+  document.getElementById('stat-tools').textContent  = tools;
+  document.getElementById('live-count-text').innerHTML = `<span>${total}</span>`;
+}
+countPublished();
+
+/* ═══════════════════════════════════════════════════
+   HERO CANVAS — graph particles
+═══════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');
+  let W,H,nodes;
+  function init(){
+    W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;
+    nodes=Array.from({length:42},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
+      r:Math.random()*2+1.2
+    }));
+  }
+  // mouse repulsion
+  let hx=-999,hy=-999;
+  document.addEventListener('mousemove',e=>{hx=e.clientX;hy=e.clientY;});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<160){ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(0,255,65,${(1-d/160)*.14})`;ctx.lineWidth=.8;ctx.stroke();}
+    }
+    nodes.forEach(n=>{
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,255,65,.5)';ctx.fill();
+    });
+  }
+  function tick(){
+    nodes.forEach(n=>{
+      // mouse repulsion
+      const dx=n.x-hx,dy=n.y-hy,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90&&d>0){const f=(.9-d/90)*.8;n.vx+=dx/d*f;n.vy+=dy/d*f;}
+      // damping
+      n.vx*=.98;n.vy*=.98;
+      // clamp speed
+      const sp=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+      if(sp>1.2){n.vx=n.vx/sp*1.2;n.vy=n.vy/sp*1.2;}
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<-10)n.x=W+10;if(n.x>W+10)n.x=-10;
+      if(n.y<-10)n.y=H+10;if(n.y>H+10)n.y=-10;
+    });
+    draw();requestAnimationFrame(tick);
+  }
+  window.addEventListener('resize',init);
+  init();tick();
+})();
+
+/* ═══════════════════════════════════════════════════
+   FEATURED CARD CANVAS
+═══════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('feat-canvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,nodes;
+  function init(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;nodes=Array.from({length:18},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:1.5+Math.random()*1.5}));}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(0,212,255,${(1-d/120)*.22})`;ctx.lineWidth=.8;ctx.stroke();}
+    }
+    nodes.forEach(n=>{ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle='rgba(0,212,255,.55)';ctx.fill();});
+  }
+  function tick(){nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});draw();requestAnimationFrame(tick);}
+  window.addEventListener('resize',init);
+  init();tick();
+})();
+
+/* ═══════════════════════════════════════════════════
+   ROLES ROTATOR
+═══════════════════════════════════════════════════ */
+(function(){
+  const track=document.getElementById('roles-track');
+  const roleH=18+18; // height + gap
+  let idx=0;
+  setInterval(()=>{
+    idx++;
+    track.style.transform=`translateY(-${idx*roleH}px)`;
+    if(idx>=4){setTimeout(()=>{track.style.transition='none';track.style.transform='translateY(0)';idx=0;setTimeout(()=>track.style.transition='',50);},650);}
+  },2400);
+})();
+
+/* ═══════════════════════════════════════════════════
+   TYPING TERMINAL
+═══════════════════════════════════════════════════ */
+(function(){
+  const LINES=[
+    'auto g = new_graph(n);',
+    'vl dist = bfs(g, src);',
+    'vl d = dijkstra(wg, 0);',
+    'DSU dsu(n); dsu.unite(u,v);',
+    'auto b = sorted(a);',
+    'auto c = counter(a);',
+    'rep(i, n) { solve(); }',
+    'chmax(ans, dp[i]);',
+    'Comb::C(n, r, MOD);',
+    'contains_sorted(a, x);',
+    'radix_sort(a);  // O(n)',
+    'if(dsu.same(u,v)) cycle!',
+  ];
+  const el=document.getElementById('t-out');
+  let li=0,ci=0,del=false,paused=false;
+  function type(){
+    if(paused){paused=false;setTimeout(type,1600);return;}
+    const line=LINES[li];
+    if(!del){
+      el.textContent=line.slice(0,ci+1);ci++;
+      if(ci===line.length){del=true;paused=true;setTimeout(type,60);return;}
+      setTimeout(type,52+Math.random()*28);
+    } else {
+      el.textContent=line.slice(0,ci-1);ci--;
+      if(ci===0){del=false;li=(li+1)%LINES.length;setTimeout(type,280);return;}
+      setTimeout(type,18);
+    }
+  }
+  type();
+})();
+
+/* ═══════════════════════════════════════════════════
+   TICKER
+═══════════════════════════════════════════════════ */
+(function(){
+  const items=['BFS','DFS','Dijkstra','DSU · Union-Find','Segment Tree','Fenwick Tree','Topological Sort','Kruskal MST','0-1 BFS','Bellman-Ford','Neural Networks','PyTorch','Computer Vision','Robotics','CAD Design','Embedded Systems','Competitive Programming','IIT ISM Dhanbad'];
+  const track=document.getElementById('ticker');
+  [...items,...items].forEach(t=>{
+    const d=document.createElement('div');d.className='ticker-item';
+    d.innerHTML=`<div class="dot"></div>${t}`;
+    track.appendChild(d);
+  });
+})();
+
+/* ═══════════════════════════════════════════════════
+   FILTER
+═══════════════════════════════════════════════════ */
+document.getElementById('filter-btns').addEventListener('click',e=>{
+  const btn=e.target.closest('.fbtn');if(!btn)return;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const f=btn.dataset.filter;
+  document.querySelectorAll('#cards-grid .card').forEach(c=>{
+    c.classList.toggle('hidden',f!=='all'&&c.dataset.cat!==f);
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL + COUNT-UP
+═══════════════════════════════════════════════════ */
+function countUp(el,target,dur=1200){
+  const start=performance.now();
+  (function f(now){
+    const p=Math.min((now-start)/dur,1);
+    const e=1-Math.pow(1-p,3);
+    el.textContent=Math.floor(e*target);
+    if(p<1)requestAnimationFrame(f);
+  })(start);
+}
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Trigger count-up on hero stats visibility
+const statsIO=new IntersectionObserver(entries=>{
+  if(entries[0].isIntersecting){
+    const g=document.getElementById('stat-guides');
+    const t=document.getElementById('stat-tools');
+    const gv=parseInt(g.textContent)||0;
+    const tv=parseInt(t.textContent)||0;
+    if(gv>0)countUp(g,gv);
+    if(tv>0)countUp(t,tv);
+    statsIO.unobserve(entries[0].target);
+  }
+},{threshold:.5});
+const hs=document.getElementById('hero-stats');
+if(hs)statsIO.observe(hs);
+
+/* ═══════════════════════════════════════════════════
+   GLITCH effect on hero name hover
+═══════════════════════════════════════════════════ */
+(function(){
+  const name=document.querySelector('.hero-name');
+  if(!name)return;
+  name.addEventListener('mouseenter',()=>{
+    let flashes=0;
+    const iv=setInterval(()=>{
+      name.style.textShadow=flashes%2===0?`2px 0 var(--red), -2px 0 var(--cyan)`:'none';
+      flashes++;
+      if(flashes>6){clearInterval(iv);name.style.textShadow='none';}
+    },60);
+  });
+})();
+</script>
+</body>
+</html>
