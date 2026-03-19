@@ -92,7 +92,7 @@ nav.scrolled{background:rgba(4,7,15,.95);backdrop-filter:blur(16px);border-botto
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
 
 /* cf widget */
-.cf-float{position:absolute;bottom:80px;right:52px;z-index:3;width:clamp(200px,20vw,260px);background:rgba(7,11,22,.92);border:1px solid var(--border2);border-radius:8px;padding:16px;backdrop-filter:blur(16px);}
+.cf-float{position:absolute;top:220px;right:52px;z-index:3;width:clamp(200px,20vw,260px);background:rgba(7,11,22,.92);border:1px solid var(--border2);border-radius:8px;padding:16px;backdrop-filter:blur(16px);}
 .cf-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
 .cf-av{width:34px;height:34px;border-radius:6px;background:var(--surface);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;overflow:hidden;}
 .cf-av img{width:100%;height:100%;object-fit:cover;}
@@ -345,9 +345,9 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
         <p>This site is my <em>public notebook</em>. Every guide here exists because I got stuck on that exact topic and couldn't find a clear explanation. If it helps someone get unstuck, it was worth writing.</p>
         <p>On the CP side I compete on <strong>Codeforces</strong> using a custom C++ template with Python ergonomics. On the ML side I explore neural architectures. On the robotics and CAD side, I <em>build things that move</em>.</p>
         <div class="alinks">
-          <a class="alink" href="https://github.com/La-Talia" target="_blank">⌥&nbsp;GitHub</a>
+          <a class="alink" href="https://github.com/LATALIA" target="_blank">⌥&nbsp;GitHub</a>
           <a class="alink" href="https://codeforces.com/profile/LATALIA" target="_blank">⚡&nbsp;Codeforces</a>
-          <a class="alink" href="mailto:raxitgupta5@gmail.com">✉&nbsp;Email</a>
+          <a class="alink" href="/cdn-cgi/l/email-protection#e391829b8a97a3869b828e938f86cd808c8e">✉&nbsp;Email</a>
           <a class="alink" href="cf_template.cpp" download>↓&nbsp;CF Template</a>
         </div>
       </div>
@@ -393,7 +393,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
 
     <div class="grid" id="grid">
 
-      <a class="card guide" href="graph-theory" target="_blank" data-cat="guide">
+      <a class="card guide" href="graph_theory.html" target="_blank" data-cat="guide">
         <div class="card-top">
           <span class="cat-lbl">GUIDE</span>
           <span class="badge bh">COMPREHENSIVE</span>
@@ -406,7 +406,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
         </div>
       </a>
 
-      <a class="card tool" href="latalia_cf_template" target="_blank" data-cat="tool">
+      <a class="card tool" href="cf_cheatsheet.html" target="_blank" data-cat="tool">
         <div class="card-top">
           <span class="cat-lbl">TOOL</span>
           <span class="badge bt">REFERENCE</span>
@@ -437,10 +437,10 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
             <span class="ci-icon">⚡</span><div><div class="ci-lbl">CODEFORCES</div><div class="ci-val">LATALIA</div></div><span class="ci-arr">↗</span>
           </a>
           <a class="ci" href="https://github.com/LATALIA" target="_blank">
-            <span class="ci-icon">⌥</span><div><div class="ci-lbl">GITHUB</div><div class="ci-val">github.com/La-Talia</div></div><span class="ci-arr">↗</span>
+            <span class="ci-icon">⌥</span><div><div class="ci-lbl">GITHUB</div><div class="ci-val">github.com/LATALIA</div></div><span class="ci-arr">↗</span>
           </a>
-          <a class="ci" href="mailto:raxit@example.com">
-            <span class="ci-icon">✉</span><div><div class="ci-lbl">EMAIL</div><div class="ci-val">raxitgupta5@gmail.com</div></div><span class="ci-arr">→</span>
+          <a class="ci" href="/cdn-cgi/l/email-protection#0476657c6d7044617c65697468612a676b69">
+            <span class="ci-icon">✉</span><div><div class="ci-lbl">EMAIL</div><div class="ci-val"><span class="__cf_email__" data-cfemail="e496859c8d90a4819c8589948881ca878b89">[email&#160;protected]</span></div></div><span class="ci-arr">→</span>
           </a>
         </div>
       </div>
@@ -477,7 +477,7 @@ footer{padding:34px 52px;border-top:1px solid var(--border);display:flex;align-i
   <div class="foot-copy">© 2025 · All inline · GitHub Pages</div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── CURSOR ──────────────────────────────────────────────────
 const cur = document.getElementById('cur');
 const cur2 = document.getElementById('cur2');
@@ -720,13 +720,4 @@ document.getElementById('filters').addEventListener('click', e => {
 });
 
 // ── HERO NAME GLITCH ─────────────────────────────────────────
-document.querySelector('.hero-name').addEventListener('mouseenter', function () {
-  let n = 0;
-  const iv = setInterval(() => {
-    this.style.textShadow = n % 2 ? 'none' : '2px 0 var(--red), -2px 0 var(--cyan)';
-    if (++n > 6) { clearInterval(iv); this.style.textShadow = 'none'; }
-  }, 60);
-});
-</script>
-</body>
-</html>
+document.querySelector('.hero-name').addEventL
